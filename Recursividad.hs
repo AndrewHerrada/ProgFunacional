@@ -95,7 +95,44 @@ divisor n = posDiv n n
     posDiv n m = if (n `mod` m)==0 then m:(posDiv n (m-1)) else posDiv n (m-1)
 
 --posDivisores::Int -> [Int]
-          
+
+
+--ejercicio10
+buscarElem n xs = elem n xs 0
+  where
+    elem n [] m  = (-1)
+    elem n (x:xs) m = if (n == x) then m else (elem n xs (m+1))
+
+--ejercicio13
+{-
+ ordenarInsercion [2,3,1]
+insertar 2 (ordenarInsercion [3,1])
+insertar 2 (insertar 3(ordenarInsercion [1]))
+insertar 2 (insertar 3 (insertar 1(ordenarInsercion [])))
+insertar 2 (insertar 3 (insertar 1([])
+insertar 2 (insertar 3 ([1]))
+insertar 2 (1:(insertar 3 []))
+insertar 2 (1:([3]))
+insertar 2 [1,3]
+1:(insertar 2 [3])
+1:(2:(3:[]))
+[1,2,3]
+-}
+ordenarInsercion [] = []
+ordenarInsercion (x:xs) = insertar x (ordenarInsercion xs)
+
+insertar e [] = [e]
+insertar e (x:xs) = if e<=x then e:(x:xs) else x:insertar e xs
+
+
+{-
+insertar 3 [1,2,5,3,1]
+1:(insertar 3 [2,5,3,1])
+1:(2:(insertar 3 [5,3,1]))
+1:(2:(3:(5:[3,1])))
+
+-}
+ 
 concatenar::[[a]]->[a]
 concatenar xss = [x | xs <- xss, x <- xs]
 
