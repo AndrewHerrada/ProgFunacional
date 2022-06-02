@@ -103,6 +103,7 @@ buscarElem n xs = elem n xs 0
     elem n [] m  = (-1)
     elem n (x:xs) m = if (n == x) then m else (elem n xs (m+1))
 
+
 --ejercicio13
 {-
  ordenarInsercion [2,3,1]
@@ -147,3 +148,21 @@ primo x = factores x == [1,x]
 primos :: Int -> [Int]
 primos x = [y | y <- [2..x], primo y]
 
+--eliminar el elemento seleccionado
+insertErased n [] = []
+insertErased n (x:xs) = if (n==x) then xs else x:insertErased n xs
+{-
+insertErased 3 [1,2,3,4]
+1:(insertErased 3 [2,3,4])
+1:(2:(insertErased 3 [3,4])
+1:(2:([4]))
+[1,2,4]
+
+insertErased 5 [1,2,3,4]
+1:(insertErased 5 [2,3,4])
+1:(2:(insertErased 5 [3,4])
+1:(2:(3:(insertErased 5 [4])))
+1:(2:(3:(4:(insertErased 5 []))))
+1:(2:(3:(4:([]))))
+[1,2,3,4]
+-}
