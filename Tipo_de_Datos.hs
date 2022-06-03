@@ -18,7 +18,7 @@ esNota2 (Cato m) = (m + esNota2 (Umss 40)) `div` 2
 --Definir una funcion que ingrese una lista de notas y devuelva las notas aprobadas
 notasDeAprobacion::[Nota]->[Nota]
 notasDeAprobacion []     = []
-notasDeAprobacion (x:xs) = if (esAprobado x) then x:(notasDeAprobacion xs) else notasDeAprobacion xs
+notasDeAprobacion (x:xs) = if esAprobado x then x:notasDeAprobacion xs else notasDeAprobacion xs
  where
    esAprobado (Maestria c)  = c /= 'D'
    esAprobado (Cato  n)   = n > 50
@@ -27,7 +27,7 @@ notasDeAprobacion (x:xs) = if (esAprobado x) then x:(notasDeAprobacion xs) else 
 
 [Int]                   Lista Enteros
 ____________________________________________________________
-| []                | Vacia                                |
+        | []                | Vacia                        |
 | 2:[] = [2]        | Añadir 2 Vacia                       |
 | 5:[2] = [5,2]     | Añadir 5 (Añadir 2 Vacia)            |
 | 3:[5,2] = [3,5,2] | Añadir 3 (Añadir 5 (Añadir 2 Vacia)) |
@@ -57,7 +57,7 @@ Anadir 1 (Anadir 2 (Anadir 3 (Vacia)))
 
 existeElem::Int->Lista Int -> Bool
 existeElem n Vacia         = False
-existeElem n (Anadir x xs) = if n==x then True else (existeElem n xs) 
+existeElem n (Anadir x xs) = if n==x then True else existeElem n xs
 
 borrarElem n Vacia         = Vacia
 borrarElem n (Anadir x xs) = if n==x then xs else Anadir x (borrarElem n xs)
@@ -78,7 +78,7 @@ sumarElem [1,2,3]
 ordenarInsercion Vacia         = Vacia
 ordenarInsercion (Anadir x xs) = insertar x (ordenarInsercion xs)
 
-insertar e Vacia         = (Anadir e Vacia)
+insertar e Vacia         = Anadir e Vacia
 insertar e (Anadir x xs) = if e<=x then Anadir e (Anadir x xs) else Anadir x (insertar e xs)
 
 --divisores :: Int -> [Int]
