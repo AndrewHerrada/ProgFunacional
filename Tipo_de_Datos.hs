@@ -27,7 +27,7 @@ notasDeAprobacion (x:xs) = if esAprobado x then x:notasDeAprobacion xs else nota
 
 [Int]                   Lista Enteros
 ____________________________________________________________
-        | []                | Vacia                        |
+| []                | Vacia                                |
 | 2:[] = [2]        | Añadir 2 Vacia                       |
 | 5:[2] = [5,2]     | Añadir 5 (Añadir 2 Vacia)            |
 | 3:[5,2] = [3,5,2] | Añadir 3 (Añadir 5 (Añadir 2 Vacia)) |
@@ -110,3 +110,73 @@ miLength (Anadir x xs) = 1 + miLength xs
 --soloPrimo (x:xs) = if (primo x)==True then x:(soloPrimo xs) else soloPrimo xs
 soloPrimo Vacia         = Vacia
 soloPrimo (Anadir x xs) = if (primo x)==True then Anadir x (soloPrimo xs) else soloPrimo xs 
+
+{-
+     Grafico                   Tipo Arbol
+__________________________________________________________
+|                   |                                    | 
+|       10          | Hoja 10                            |
+|___________________|____________________________________|
+|       /  \        |                                    |
+|      10  20       |Rama (Hoja 10) (Hoja 20)            |
+|___________________|____________________________________|
+|      / \          |                                    |
+|     /   5         |                                    |
+|    /\             |Rama(Rama(Hoja 10)(Hoja 20))(Hoja 5)|
+|  10 20            |                                    |
+|___________________|____________________________________|
+-}
+data Arbol a = Hoja a | Rama (Arbol a) (Arbol a)
+  deriving Show
+
+arb = Rama (Hoja 5) (Rama (Rama(Hoja 2)(Hoja 10))(Hoja 30))
+arb1 = Rama (Hoja 5) (Rama (Rama(Hoja 2)(Hoja 11))(Hoja 30))
+
+totalHojas::Arbol Integer -> Integer
+totalHojas (Hoja x)    = 1
+totalHojas (Rama ai ad) = (totalHojas ai) + (totalHojas ad)
+
+sumatoriaHojas::Arbol Integer -> Integer
+sumatoriaHojas (Hoja x)     = x
+sumatoriaHojas (Rama ai ad) = (sumatoriaHojas ai) + (sumatoriaHojas ad)
+
+{-
+sumatoriaHojas Rama(Rama(Hoja 10)(Hoja 20))(Hoja 5)
+ai = (Rama(Hoja 10)(Hoja 20))
+ad = Hoja 5
+sumatoriaHojas (Rama(Hoja 10)(Hoja 20)) + sumatoriaHojas (Hoja 5)
+sumatoriaHojas (Rama(Hoja 10)(Hoja 20)) + 5
+ai = Hoja 10
+ad = Hoja 20
+(sumatoriaHojas (Hoja 10) + sumatoriaHojas (Hoja 20)) + 5
+                10        +           20                5
+= 35
+-}
+
+--comparar [] []        = True
+--comparar [] ys        = False
+--comparar xs []        = False
+--comparar (x:xs)(y:ys) = if x==y then comparar xs ys else False
+
+compararArboles (Hoja a) (Hoja b)                     = if a == b then True else False 
+compararArboles (Rama (ai1) (ad1)) (Rama (ai2) (ad2)) = compararArboles ai1 ai2 && compararArboles ad1 ad2
+compararArboles _ _                                   = False
+
+
+preorden::Arbol a -> [a]
+preorden (Hoja x)     = [x]
+preorden (Rama ai ad) = (preorden ai ++ preorden ad)
+{-
+preorden Rama(Rama(Hoja 10)(Hoja 20))(Hoja 5)
+ai = Rama(Rama(Hoja 10)(Hoja 20))
+ad = Hoja 5
+preorden (Rama(Hoja 10)(Hoja 20)) ++ preorden Hoja 5
+preorden (Rama(Hoja 10)(Hoja 20)) ++ [5]
+ai = Hoja 10
+ad = Hoja 20
+preorden ((Hoja 10) ++ (Hoja 20)) ++ [5]
+preorden ([10] ++ [20]) ++ [5]
+preorden [10,20,5]
+-}
+
+
