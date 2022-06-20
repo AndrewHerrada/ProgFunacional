@@ -179,4 +179,81 @@ preorden ([10] ++ [20]) ++ [5]
 preorden [10,20,5]
 -}
 
+{-Arbol de busqueda
+-------------------------------------------\
+    .    Hoja                              |
+-------------------------------------------|
+   20                                      |
+  /  \   Rama 20 Hoja Hoja                 |
+ .    .                                    |
+-------------------------------------------|
+   10                                      |
+  /  \   Rama 10 Hoja (Rama 20 Hoja Hoja)  |
+ .    20                                   |
+     /  \                                  |
+    .    .                                 |
+-------------------------------------------/
+-}
+
+
+
+data ArbolBus a = Hoja1 | Rama1 a (ArbolBus a) (ArbolBus a)
+  deriving Show
+
+arbus = Rama1 20 (Rama1 10 Hoja1 Hoja1)(Rama1 40 (Rama1 30(Rama1 25 Hoja1 Hoja1)(Rama1 36 Hoja1 Hoja1))(Rama1 50 Hoja1 Hoja1))
+arbus1 = Rama1 10 Hoja1 (Rama1 20 Hoja1 Hoja1)
+arbus2 = Rama1 ("ale",10) Hoja1 (Rama1 ("leo",20) Hoja1 Hoja1)
+arbus3 = Rama1 ("ruth",20) (Rama1 ("jose",10) Hoja1 Hoja1)(Rama1 ("leo",20) (Rama1 ("ernan",30)(Rama1 ("ale",25) Hoja1 Hoja1)(Rama1 ("zule",36) Hoja1 Hoja1))(Rama1 ("santi",50) Hoja1 Hoja1))
+
+                                       
+buscar::Integer->ArbolBus Integer->Bool
+buscar x Hoja1 = False
+buscar x (Rama1 r ai ad)
+  |x==r = True
+  |x<r  = buscar x ai
+  |x>r  = buscar x ad
+
+insertarArbol e (Hoja1) = Rama1 e Hoja1 Hoja1
+insertarArbol e (Rama1 r ai ad)
+  |e>r  = Rama1 r ai (insertarArbol e ad)
+  |e<r  = Rama1 r (insertarArbol e ai) ad
+  |e==r = Rama1 r ai ad
+
+listArbol (Hoja1) = []
+listArbol (Rama1 r ai ad) = r:((listArbol ai) ++ (listArbol ad))
+
+crearLista []     = Hoja1
+crearLista (x:xs) =  Rama1 x (crearLista (filter(<= x) xs))(crearLista (filter (>x) xs))
+
+--------------------------------------------------------------------------------------------
+type Materia = String
+type Alumno = String
+type Calificacion = Int
+type Notas = ArbolBus(Alumno,Calificacion)
+type Plantilla = (Materia,Notas)
+
+--notaMayor::Planilla->Calificacion
+notaMayor (cadena,arbol) = nota (arbol)
+nota Hoja1 = 0
+nota (Rama1 (nom,not) ai ad) = if not>nota(ad) then not else nota ad  
+mayor(x:xs) = if x > mayor(xs) then x else mayor xs
+
+
+inserta dupla (cadena,arbol) = meter dupla arbol
+meter dupla (Hoja1) = Rama1 dupla Hoja1 Hoja1
+meter (nuevoNom,laNota) (Rama1 (nom,not) ai ad)
+  |laNota > not = Rama1 (nom,not) ai (meter (nuevoNom,laNota) ad)
+  |laNota < not = Rama1 (nom,not) (meter (nuevoNom,laNota) ai) ad
+  |laNota == not = Rama1 (nom,not) ai ad
+
+
+meter1 dupla (cad,Hoja1) = (cad,Rama1 dupla Hoja1 Hoja1)
+meter1 (nuevoNom,laNota) (cad,(Rama1 (nom,not) ai ad))
+  |laNota > not = (cad,Rama1 (nom,not) ai (meter (nuevoNom,laNota) ad))
+  |laNota < not = (cad,Rama1 (nom,not) (meter (nuevoNom,laNota) ai) ad)
+  |laNota == not = (cad,Rama1 (nom,not) ai ad)
+--data Lista a = Vacia | Anadir a (Lista a)
+--  deriving Show
+--data Natural = Cero | Sgte Natural
+--  deriving Show
 
